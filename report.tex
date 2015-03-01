@@ -1,0 +1,473 @@
+\documentclass{article}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{graphicx}
+
+\begin{document}
+\title{AVL v/s RED-BLACK}
+\author{Sagar.S , Thanmai.M.Bindi , Varun.P.Shastry }
+\date{18th MARCH 2010}
+\maketitle
+
+
+
+\section{GENERAL DESCRIPTION}
+\textbf{AVL tree} is a self balancing binary search tree.\\
+it is the first such data structure to be invented.In an AVL tree, the heights of the two child subtrees of any node differ by at most one; therefore, it is also said to be height-balanced.Lookup, insertion, and deletion all take O(log n) time in both the average and worst cases, where n is the number of nodes in the tree prior to the operation.
+The AVL tree is named after its two inventors, G.M. Adelson-Velskii and E.M. Landis, who published it in their 1962 paper "An algorithm for the organization of information."
+\\
+\\
+\\
+\textbf{RED-BLACK tree} is a type of self-balancing binary search tree.\\
+It is complex, but has good worst-case running time for its operations and is efficient in practice: it can search, insert, and delete in O(log n) time, where n is total number of elements in the tree. Put very simply, a red-black tree is a binary search tree which inserts and removes intelligently, to ensure the tree is reasonably balanced.
+The original structure was invented in 1972 by Rudolf Bayer who called them "symmetric binary B-trees", but acquired its modern name in a paper in 1978 by Leonidas J. Guibas and Robert Sedgewick.
+\newpage
+\section{ALGORITHM}
+\subsection{AVL tree}
+Properties of AVL tree:
+\begin{itemize}
+\item  The AVL tree is said to be balanced if and only if the no. of nodes on the right side of the tree is same as the nodes on left side of the tree.
+\item  If the no. of nodes on the right side {$>$} left side then \textit right balanced\\.
+\item  If the no. of nodes on the left side {$>$} right side then \textit left balanced\\.
+
+\end{itemize}
+The steps involved in AVL insertion is as follows:
+\begin{itemize}
+\item  Insertion begins by adding the node much as binary search tree insertion does.
+\item  The node inserted is assigned a height of 1.
+\item  Difference of the sibling height is checked till the root.
+\item  If the difference is greater than {$2$} then rotation is done for balancing.
+
+\end{itemize}
+\subsection{RED-BLACK tree}
+Properties of RED-BLACK tree:
+\begin{itemize}
+\item  Every node is either red or black.
+\item  The root is black.
+\item  If a node is red,then both its children are black.
+\item  For each node, all simple paths from the node to descendant leaves contain the same number of black nodes.
+
+\end{itemize}
+The steps involved in RED-BLACK insertion as follows:
+\begin{itemize}
+\item  Insertion begins by adding the node much as binary search tree insertion does.
+\item  The node inserted is always painted red.
+\item  The node is checked for red-red violation and black height violation.
+\item  Rotation is done for balancing the height[black height].
+\end{itemize}
+\newpage
+\section{PSEUDOCODE}
+\subsection{AVL insertion}
+\begin{algorithm}
+\caption{HEIGHT(A)}
+\begin{algorithmic}
+{
+	\IF{$(A=NULL)$}
+		\RETURN 0
+	\ENDIF
+	\RETURN	1+MAX(HEIGHT(A.left),HEIGHT(A.right))
+}
+\end{algorithmic}
+\end{algorithm}
+\begin{algorithm}
+\caption{MAX(a,b)}
+\begin{algorithmic}
+{
+	\IF{$(a > b)$}
+		\RETURN a
+	\ELSE
+		\RETURN b
+	\ENDIF
+}
+\end{algorithmic}
+\end{algorithm}
+\begin{algorithm}
+\caption{SIBLINGHEIGHT(X)}
+\begin{algorithmic}
+{
+	\IF{$(X.parent \neq NULL)$}
+	{
+		\IF{$(X = X.parent.right)$}
+		{
+			\IF{$(X.parent.left = NULL)$}
+				\RETURN 0
+			\ELSE
+				\RETURN HEIGHT(X.parent.left)
+			\ENDIF
+		}
+		\ENDIF
+		\IF{$(X = X.parent.left)$}
+		{
+			\IF{$(X.parent.right = NULL)$}
+				\RETURN 0
+			\ELSE
+				\RETURN HEIGHT(X.parent.right)
+			\ENDIF
+		}
+		\ENDIF
+	}
+	\ENDIF
+}
+\end{algorithmic}
+\end{algorithm}
+\newpage
+\begin{algorithm}
+\caption{AVL(key)}
+\begin{algorithmic}
+{
+	\STATE temp.info {$\leftarrow$} key
+	\IF {$(root = NULL)$}
+		\STATE root.info {$\leftarrow$} temp
+	\ENDIF
+	\WHILE {$ current \neq NULL$}
+	{
+		\STATE prev {$\leftarrow$} current
+		\IF {$(current.info < key)$}
+			\STATE current {$\leftarrow$} current.left
+		\ELSE
+			\STATE current {$\leftarrow$} current.right
+		\ENDIF
+	}
+	\ENDWHILE 
+	\IF {$(prev.info < key)$}
+		\STATE prev.right.info {$\leftarrow$} temp
+	\ELSE
+		\STATE prev.left.info {$\leftarrow$} temp
+	\ENDIF
+	\STATE temp.parent {$\leftarrow$} prev
+	\WHILE {$(current \neq NULL)$}
+	{
+		\IF {$( HEIGHT(current) - SIBLINGHEIGHT(current) > |2| )$}
+			\STATE BALANCE(current.parent,current)
+		\ENDIF
+		\STATE current {$\leftarrow$} current.parent
+	}
+	\ENDWHILE
+}
+\end{algorithmic}
+\end{algorithm}
+\begin{algorithm}
+\caption{BALANCE(Z,Y)}
+\begin{algorithmic}
+{
+	\IF {$(Y.left \neq NULL ~and~ Y.right \neq NULL)$}
+		\IF {$( HEIGHT(Y.left) > HEIGHT(Y.right) )$}
+			\STATE X {$\leftarrow$} Y.left 
+		\ELSE	
+			\STATE X {$\leftarrow$} Y.right
+	\ELSIF {$(Y.left = NULL)$}
+		\STATE X {$\leftarrow$} Y.right
+		\ELSE
+			\STATE X {$\leftarrow$} Y.left
+		\ENDIF
+	\ENDIF
+	\IF{$(X.info < Z.info)$}
+	{
+		\IF{$(X.info < Y.info)$}
+			\STATE RIGHT-ROTATE(Y,Z)
+		\ELSE
+			\STATE LEFT-ROTATE(X,Y)
+			\STATE RIGHT-ROTATE(X,Z)
+		\ENDIF
+	}
+	\ELSE
+	{
+		\IF{$(X.info < Y.info)$}
+		{
+			\STATE RIGHT-ROTATE(X,Y)
+			\STATE LEFT-ROTATE(X,Z)
+		}
+		\ELSE
+		{
+			\STATE LEFT-ROTATE(Y,Z)
+		}
+		\ENDIF
+	}
+	\ENDIF
+}
+\end{algorithmic}
+\end{algorithm}
+
+\newpage
+\subsection{RED-BLACK insertion}
+
+\begin{algorithm}
+\caption{UNCL(child)}
+\begin{algorithmic}
+{
+	\IF{$(child.parent = child.parent.parent.right)$}
+		\RETURN child.parent.parent.left
+	\ELSE
+		\RETURN child.parent.parent.right
+	\ENDIF
+}
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{GRAND(child)}
+\begin{algorithmic}
+{
+	\RETURN child.parent.parent
+}
+\end{algorithmic}
+\end{algorithm}
+\begin{algorithm}
+\caption{REDBLACK(info)}
+\begin{algorithmic}
+{
+	\STATE temp.info {$\leftarrow$} info
+	\IF {$(root = NULL)$}
+		\STATE root.info {$\leftarrow$} temp
+	\ENDIF
+	\WHILE {$ current \neq NULL$}
+	{
+		\STATE prev {$\leftarrow$} current
+		\IF {$(current.info < key)$}
+			\STATE current {$\leftarrow$} current.left
+		\ELSE
+			\STATE current {$\leftarrow$} current.right
+		\ENDIF 
+	}
+	\ENDWHILE
+	\IF {$(prev.info < key)$}
+		\STATE prev.right.info {$\leftarrow$} temp
+	\ELSE
+		\STATE prev.left.info {$\leftarrow$} temp
+	\ENDIF
+	\STATE temp.parent {$\leftarrow$} prev
+	\STATE FIX(temp)
+}
+\end{algorithmic}
+\end{algorithm}
+\begin{algorithm}
+\caption{FIX(child)}
+\begin{algorithmic}
+{
+	\WHILE{$(child \neq root  ~and~  child.color = RED  ~and~  child.parent.color = RED)$}
+	{
+		\STATE grandparent {$\leftarrow$} GRAND(child)
+		\STATE uncle {$\leftarrow$} UNCL(child)
+		\IF{$(uncle = NULL)$}
+		{
+			\IF{$(LEFT-LEFT case)$}
+			{
+				\STATE child.parent.color {$\leftarrow$} BLACK
+				\STATE grandparent.color {$\leftarrow$} RED
+				\STATE RIGHT-ROTATE(child.parent,grandparent)
+			}
+			\ELSIF{$(RIGHT-RIGHT case)$}
+			{
+				\STATE child.parent.color {$\leftarrow$} BLACK
+				\STATE grandparent.color {$\leftarrow$} RED
+				\STATE LEFT-ROTATE(child.parent,grandparent)
+			}
+				\ELSIF {$ (LEFT-RIGHT case) $}
+				{
+					\STATE child.color {$\leftarrow$} BLACK
+					\STATE grandparent.color {$\leftarrow$} RED
+					\STATE LEFT-ROTATE(child,child.parent),RIGHT-ROTATE(child,grandparent)
+				}
+				\ELSE  
+					{
+						\STATE child.color {$\leftarrow$} BLACK
+						\STATE grandparent.color {$\leftarrow$} RED
+						\STATE RIGHT-ROTATE(child,child.parent),LEFT-ROTATE(child,grandparent)
+					}
+			\ENDIF
+		}
+		\ELSIF{$(uncle.color = RED)$}
+		{
+			\STATE child.parent.color {$\leftarrow$} BLACK
+			\STATE uncle.color {$\leftarrow$} BLACK
+			\STATE grandparent.color {$\leftarrow$} RED
+			\STATE child {$\leftarrow$} grandparent
+		}
+			\ELSE 
+			{
+				\IF{$ (LEFT-LEFT case) $}
+				{
+					\STATE child.parent.color {$\leftarrow$} BLACK
+					\STATE grandparent.color {$\leftarrow$} RED
+					\STATE RIGHT-ROTATE(child.parent,grandparent)
+				}
+				\ELSIF{ $(LEFT-RIGHT case)$ }
+					{
+						\STATE child.color {$\leftarrow$} BLACK
+						\STATE grandparent.color {$\leftarrow$} RED
+						\STATE RIGHT-ROTATE(child,child.parent),LEFT-ROTATE(child,grandparent)
+					}
+					\ELSIF{ $(RIGHT-RIGHT case)$ }
+						{
+							\STATE child.parent.color {$\leftarrow$} BLACK
+							\STATE grandparent.color {$\leftarrow$} RED
+							\STATE LEFT-ROTATE(child.parent,grandparent)
+						}
+						\ELSE
+						{
+							\STATE child.color {$\leftarrow$} BLACK
+ 							\STATE grandparent.color {$\leftarrow$} RED
+							\STATE LEFT-ROTATE(child,child.parent),RIGHT-ROTATE(child,grandparent)
+						}
+				\ENDIF
+			}
+		\ENDIF
+	}
+	\ENDWHILE
+	\STATE root.color {$\leftarrow$} BLACK
+}
+\end{algorithmic}
+\end{algorithm}
+\newpage
+\subsection{ROTATIONS}
+\begin{algorithm}
+\caption{LEFT-ROTATE(Y,Z)}
+\begin{algorithmic}
+{
+	\STATE Z.right {$\leftarrow$} Y.left
+	\STATE Y.parent {$\leftarrow$} Z.parent
+        \IF{$(Y.left \neq NULL)$}
+		\STATE Y->llink->parent {$\leftarrow$} Z
+	\ENDIF
+	\IF{$(Y.parent = NULL)$}
+		\STATE root {$\leftarrow$} Y
+	\ELSIF{$(Z = Z.parent.right)$}
+		\STATE Z.parent.right {$\leftarrow$} Y
+		\ELSE 
+			\STATE Z.parent.left {$\leftarrow$} Y	
+	\ENDIF
+	\STATE Y.left {$\leftarrow$} Z
+	\STATE Z.parent {$\leftarrow$} Y		
+}
+\end{algorithmic}
+\end{algorithm}
+\begin{algorithm}
+\caption{RIGHT-ROTATE(Y,Z)}
+\begin{algorithmic}
+{
+	\STATE Z.left {$\leftarrow$} Y.right
+	\STATE Y.parent {$\leftarrow$} Z.parent
+	\IF{$(Y.right \neq NULL)$}
+	    \STATE Y.right.parent {$\leftarrow$} Z
+	\ENDIF
+	\IF{$(Y.parent = NULL)$}
+		\STATE root {$\leftarrow$} Y
+	\ELSIF{$(Z = Z.parent.right)$}
+		\STATE Z.parent.right {$\leftarrow$} Y
+		\ELSE 
+			\STATE Z.parent.left {$\leftarrow$} Y
+	\ENDIF
+	\STATE Y.right {$\leftarrow$} Z
+	\STATE Z.parent {$\leftarrow$} Y
+}
+\end{algorithmic}
+\end{algorithm}
+\newpage
+\section{COMPLEXITY}
+\subsection{AVL insertion}
+Lookup, insertion, and deletion all take O(log n) time.
+\subsection{RED-BLACK insertion}
+It can search, insert, and delete in O(log n) time.
+\section{Profiling}
+
+%Flat profile:
+%
+%Each sample counts as 0.01 seconds.\\
+%  \begin{table}[h]
+%\begin{tabular}{|c|c|c|c|c|c|c|}
+%\hline\hline
+%
+%
+% \%time & cumulative secs  &self secs &calls &self s/call &total s/call &name \\
+%       
+% \hline
+%99.98    & 81.56    &81.56       &10     &8.16     &8.16  &bubble \\
+%  0.02     &81.58     &0.02        &         &         &        &main\\
+%\hline
+%\end{tabular}
+%\end{table}
+%
+%\begin{itemize}
+%\item 
+% \% time        the percentage of the total running time of the
+%      program used by this function.
+
+%
+%\item cumulative secs a running sum of the number of seconds accounted
+%    for by this function and those listed above it.
+%
+%\item  self secs     the number of seconds accounted for by this   function alone.  This is the major sort for this
+%           listing.
+%
+%\item calls      the number of times this function was invoked, if
+%           this function is profiled, else blank.
+% 
+%\item  self ms/call     the average number of milliseconds spent in this
+%    function per call, if this function is profiled,
+%	   else blank.
+%
+% \item total ms/call    the average number of milliseconds spent in this
+%    function and its descendents per call, if this 
+%	   function is profiled, else blank.
+%
+%\item name       the name of the function. 
+%
+%\end{itemize}
+\begin{table}[h]
+\caption{AVL insertion}
+\centering
+
+
+\begin{tabular}{|c|c|} 
+\hline 
+\hline 
+no of elements  &  time taken \\ 
+\hline 
+2500 & 0.360000 \\ 
+5000 & 1.550000 \\ 
+7500 & 3.580000 \\ 
+10000 & 6.400000 \\ 
+12500 & 10.120000 \\ 
+15000 & 14.540000 \\ 
+17500 & 20.140000 \\ 
+20000 & 26.480000 \\ 
+\hline 
+\end{tabular}
+\caption{RED-BLACK insertion}
+\begin{tabular}{|c|c|} 
+\hline 
+\hline 
+no of elements  &  time taken \\ 
+\hline 
+2500 & 0.000000 \\ 
+5000 & 0.000000 \\ 
+7500 & 0.000000 \\ 
+10000 & 0.000000 \\ 
+12500 & 0.000000 \\ 
+15000 & 0.000000 \\ 
+17500 & 0.010000 \\ 
+20000 & 0.000000 \\ 
+\hline 
+\end{tabular}
+\caption{No of rotations} 
+\begin{tabular}{|c|c|c|} 
+\hline 
+\hline 
+no of elements  &  no of rotation in avl & no of rotation in red-black \\ 
+\hline 
+2500 & 1767 & 1546 \\ 
+5000 & 3514 & 2898 \\ 
+7500 & 5311 & 4465 \\ 
+10000 & 7052 & 5831 \\ 
+12500 & 8835 & 7302 \\ 
+15000 & 10585 & 8761 \\ 
+17500 & 12375 & 10307 \\ 
+20000 & 14176 & 11757 \\ 
+\hline 
+\end{tabular}
+\end{table}
+\begin{figure}
+\includegraphics[height=5in,width=5in]{avlrb.jpg}
+\caption{Graph Plot Of AVL v/s RED-BLACK}
+\end{figure}
+\end{document}

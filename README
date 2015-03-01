@@ -1,0 +1,10 @@
+Basic:
+1. make : builds the executable program.
+2. make profile : profile the avl and red-black insertion.
+3. make plot : generate a graph containing the plot of time taken for avl insertion v/s red-black insertion.
+4. make clean : removes all the data, log , aux and other files from the folder.
+5. make report : to generate report corresponding to the particular latex file.
+6. make dotty : to generate the dotty files.
+
+PS: make report dynamically appends the newly generated values for the final pdf report.we have made use of 3 awk scripts each for three tables(two contains the avl and red-black insertion time, third one contains the table for no of rotation done for both).
+make report cleans the older values first and then generates the report.
